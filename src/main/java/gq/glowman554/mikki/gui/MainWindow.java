@@ -324,7 +324,7 @@ public class MainWindow extends Thread
 		this.newPassword.setBounds(139, 107, 158, 20);
 		this.panel.add(this.newPassword);
 		this.newPassword.setColumns(10);
-		
+
 		this.licenseText = new JTextArea();
 		try
 		{
