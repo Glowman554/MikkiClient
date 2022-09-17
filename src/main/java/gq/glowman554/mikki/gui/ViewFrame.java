@@ -124,7 +124,7 @@ public class ViewFrame extends JFrame
 					JFileChooser fileChooser = new JFileChooser();
 					fileChooser.setDialogTitle("Specify a file to save");
 					fileChooser.setSelectedFile(new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "/" + page.page_title + ".md"));
-					
+
 					int userSelection = fileChooser.showSaveDialog(null);
 
 					if (userSelection == JFileChooser.APPROVE_OPTION)

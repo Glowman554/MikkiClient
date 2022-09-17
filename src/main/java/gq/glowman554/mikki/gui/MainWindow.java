@@ -243,7 +243,7 @@ public class MainWindow extends Thread
 				Log.log(String.format("Creating %s@%s", usernameText.getText(), passwordText.getText()));
 
 				try
-				{			
+				{
 					mikki_acc.create(usernameText.getText(), passwordText.getText());
 					login_check();
 				}
@@ -273,10 +273,12 @@ public class MainWindow extends Thread
 		this.editorBox.setEnabled(false);
 		this.editorBox.setBounds(305, 7, 97, 23);
 		this.panel.add(this.editorBox);
-		
+
 		this.deleteButton = new JButton("Delete");
-		this.deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		this.deleteButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				try
 				{
 					mikki_acc.delete();
@@ -285,17 +287,19 @@ public class MainWindow extends Thread
 				{
 					throw new IllegalStateException(e1.getMessage());
 				}
-				
+
 				login_check();
 			}
 		});
 		this.deleteButton.setEnabled(false);
 		this.deleteButton.setBounds(307, 72, 89, 23);
 		this.panel.add(this.deleteButton);
-		
+
 		this.changePasswordButton = new JButton("Change password");
-		this.changePasswordButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		this.changePasswordButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				try
 				{
 					mikki_acc.chpasswd(newPassword.getText());
@@ -305,13 +309,13 @@ public class MainWindow extends Thread
 				{
 					throw new IllegalStateException(e1.getMessage());
 				}
-				
+
 				login_check();
 			}
 		});
 		this.changePasswordButton.setBounds(10, 106, 119, 23);
 		this.panel.add(this.changePasswordButton);
-		
+
 		this.newPassword = new JTextField();
 		this.newPassword.setBounds(139, 107, 158, 20);
 		this.panel.add(this.newPassword);
@@ -339,17 +343,19 @@ public class MainWindow extends Thread
 
 		this.newButton = new JButton("New page");
 		this.newButton.setEnabled(false);
-		this.newButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				
+		this.newButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				try
 				{
 
 					Log.log("Creating page " + newPageName.getText() + "...");
-	
-					MikkiPage page =  mikki.create(MikkiPage.encode("# New page"), MikkiPage.encode(newPageName.getText()), mikki_acc.token());					
-					
+
+					MikkiPage page = mikki.create(MikkiPage.encode("# New page"), MikkiPage.encode(newPageName.getText()), mikki_acc.token());
+
 					load_pages_and_changes();
-					
+
 					new ViewFrame(mikki, mikki_acc, _this, page.page_id).setVisible(true);
 				}
 				catch (IOException | IllegalArgumentException | IllegalAccessException e2)
@@ -366,25 +372,29 @@ public class MainWindow extends Thread
 		this.newPageName.setBounds(105, 17, 86, 20);
 		this.panel_1.add(this.newPageName);
 		this.newPageName.setColumns(10);
-		
+
 		this.panel_2 = new JPanel();
 		this.panel_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Refresh", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		this.panel_2.setBounds(20, 651, 101, 45);
 		this.frame.getContentPane().add(this.panel_2);
 		this.panel_2.setLayout(null);
-		
+
 		this.refreshButton = new JButton("Refresh");
-		this.refreshButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		this.refreshButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				load_pages_and_changes();
-				
+
 				if (preload)
 				{
 					mikki = new Mikki();
 					mikki_acc = new MikkiAccountChecker(mikki);
 					mikki.setPr((p) -> preloadProgress.setValue(p));
 					mikki.start();
-				} else {
+				}
+				else
+				{
 					mikki.clean_cache();
 				}
 			}
@@ -398,7 +408,7 @@ public class MainWindow extends Thread
 	{
 		load_pages_and_changes();
 		login_check();
-		
+
 		if (want_preload())
 		{
 			preload = true;
@@ -441,12 +451,11 @@ public class MainWindow extends Thread
 			ld.update(1);
 
 			var changes = mikki.changelog();
-			
+
 			while (((DefaultTableModel) this.changelogTable.getModel()).getRowCount() != 0)
 			{
 				((DefaultTableModel) this.changelogTable.getModel()).removeRow(0);
 			}
-
 
 			for (int i = 0; i < changes.$.len(); i++)
 			{
@@ -480,7 +489,7 @@ public class MainWindow extends Thread
 		passwordText.setText("");
 		logoutButton.setEnabled(true);
 		deleteButton.setEnabled(true);
-		
+
 		try
 		{
 			if (mikki_acc.editor())
@@ -493,7 +502,7 @@ public class MainWindow extends Thread
 		{
 			throw new IllegalStateException(e.getMessage());
 		}
-		
+
 		changePasswordButton.setEnabled(true);
 		newPassword.setEnabled(true);
 
@@ -511,10 +520,10 @@ public class MainWindow extends Thread
 		passwordText.setText("");
 		logoutButton.setEnabled(false);
 		deleteButton.setEnabled(false);
-		
+
 		newPageName.setEnabled(false);
 		newButton.setEnabled(false);
-		
+
 		changePasswordButton.setEnabled(false);
 		newPassword.setEnabled(false);
 
@@ -526,7 +535,7 @@ public class MainWindow extends Thread
 		if (mikki_acc.check())
 		{
 			login_success();
-			
+
 			try
 			{
 				editorBox.setSelected(mikki_acc.editor());
@@ -542,7 +551,7 @@ public class MainWindow extends Thread
 			login_reset();
 		}
 	}
-	
+
 	public boolean want_preload()
 	{
 		String[] options = new String[] {"yes", "no"};

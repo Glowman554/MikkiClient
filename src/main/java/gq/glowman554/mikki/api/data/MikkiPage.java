@@ -19,12 +19,12 @@ public class MikkiPage
 
 	@ReflexField
 	public String page_id;
-	
+
 	public static String process_escapes(String text)
 	{
 		return text.replace("\\\\", "\\\\").replace("\"", "\\\"").replace("\b", "\\b").replace("\f", "\\f").replace("\n", "\\n").replace("\t", "\\t");
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static String encode(String text)
 	{

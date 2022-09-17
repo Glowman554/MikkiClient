@@ -44,33 +44,32 @@ public class Mikki extends Thread
 			return page;
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public MikkiPage update(String page_id, String page_text, String page_title, String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		Log.log(page_text);
 		String response = HttpClient.post(String.format(this.base_url + "/wiki/page/edit?token=%s&page_id=%s&page_title=%s", token, page_id, page_title), page_text);
 		MikkiPage page = (MikkiPage) new Reflex(new ReflexJsonLoader(URLDecoder.decode(response))).load(new MikkiPage());
-		
+
 		page_cache.remove(page.page_id);
 		return page;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public MikkiPage create(String page_text, String page_title, String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.post(String.format(this.base_url + "/wiki/page/create?token=%s&page_title=%s", token, page_title), page_text);
 		MikkiPage page = (MikkiPage) new Reflex(new ReflexJsonLoader(URLDecoder.decode(response))).load(new MikkiPage());
-		
+
 		return page;
 	}
-	
+
 	public void delete(String page_id, String token) throws IOException
 	{
 		String response = HttpClient.get(String.format(this.base_url + "/wiki/page/delete?token=%s&page_id=%s", token, page_id));
 		Log.log(response);
 	}
-
 
 	@SuppressWarnings("deprecation")
 	public MikkiChanges changelog() throws IOException, IllegalArgumentException, IllegalAccessException
@@ -85,60 +84,60 @@ public class Mikki extends Thread
 		JsonNode obj = JsonNode.object();
 		obj.set("username", username);
 		obj.set("password", password);
-		
+
 		String response = HttpClient.post(this.base_url + "/acc/login", obj.toString());
-		
+
 		return (MikkiToken) new Reflex(new ReflexJsonLoader(response)).load(new MikkiToken());
 	}
-	
+
 	public MikkiToken create_account(String username, String password) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		JsonNode obj = JsonNode.object();
 		obj.set("username", username);
 		obj.set("password", password);
-		
+
 		String response = HttpClient.post(this.base_url + "/acc/create", obj.toString());
-		
+
 		return (MikkiToken) new Reflex(new ReflexJsonLoader(response)).load(new MikkiToken());
 	}
-	
+
 	public void delete_account(String token) throws IOException
 	{
 		String response = HttpClient.post(this.base_url + "/acc/delete", token);
 		Log.log(response);
 	}
-	
+
 	public MikkiAccount info(String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.post(this.base_url + "/acc/info", token);
-		
+
 		return (MikkiAccount) new Reflex(new ReflexJsonLoader(response)).load(new MikkiAccount());
 	}
-	
+
 	public MikkiAccount chpasswd(String token, String new_password) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		JsonNode obj = JsonNode.object();
 		obj.set("token", token);
 		obj.set("password", new_password);
-		
+
 		String response = HttpClient.post(this.base_url + "/acc/chpasswd", obj.toString());
-		
+
 		return (MikkiAccount) new Reflex(new ReflexJsonLoader(response)).load(new MikkiAccount());
 	}
-	
+
 	public boolean check(String token) throws IOException
 	{
 		String response = HttpClient.post(this.base_url + "/acc/check", token);
-		
+
 		return response.equals("true");
 	}
-	
+
 	public void clean_cache()
 	{
 		Log.log("Deleting cache...");
 		page_cache.clear();
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -167,7 +166,7 @@ public class Mikki extends Thread
 		{
 			e.printStackTrace();
 		}
-		
+
 		Log.log("Prload finished.");
 	}
 

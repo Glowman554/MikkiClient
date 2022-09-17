@@ -13,7 +13,7 @@ public class HttpClient
 	public static String get(String _url, Map<String, String> headers) throws IOException
 	{
 		Log.log("GET " + _url);
-		
+
 		URL url = new URL(_url);
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setRequestMethod("GET");
@@ -27,7 +27,7 @@ public class HttpClient
 		{
 			throw new IllegalStateException("HTTP " + con.getResponseCode());
 		}
-		
+
 		String response = "";
 		for (byte b : con.getInputStream().readAllBytes())
 		{
@@ -59,15 +59,14 @@ public class HttpClient
 		{
 			con.setRequestProperty(key, headers.get(key));
 		}
-		
+
 		con.getOutputStream().write(body.getBytes());
-		
+
 		if (con.getResponseCode() != 200)
 		{
 			throw new IllegalStateException("HTTP " + con.getResponseCode());
 		}
-		
-		
+
 		String response = "";
 		for (byte b : con.getInputStream().readAllBytes())
 		{

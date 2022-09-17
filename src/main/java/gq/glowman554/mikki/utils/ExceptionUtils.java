@@ -8,7 +8,7 @@ public class ExceptionUtils
 	public static void intercept()
 	{
 		Log.log("Installing uncaught exception interceptor...");
-		
+
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler()
 		{
 
