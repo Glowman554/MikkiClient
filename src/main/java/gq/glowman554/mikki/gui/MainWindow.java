@@ -37,7 +37,7 @@ import javax.swing.JTextArea;
 public class MainWindow extends Thread
 {
 
-	private JFrame frame;
+	private JFrame frmMikki;
 	private JTabbedPane tabbedPane;
 	private JScrollPane scrollPane;
 	private JTable pagesTable;
@@ -93,7 +93,7 @@ public class MainWindow extends Thread
 				try
 				{
 					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
+					window.frmMikki.setVisible(true);
 				}
 				catch (Exception e)
 				{
@@ -117,15 +117,16 @@ public class MainWindow extends Thread
 	 */
 	private void initialize()
 	{
-		this.frame = new JFrame();
-		this.frame.setResizable(false);
-		this.frame.setBounds(100, 100, 968, 742);
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.getContentPane().setLayout(null);
+		this.frmMikki = new JFrame();
+		this.frmMikki.setTitle("Mikki");
+		this.frmMikki.setResizable(false);
+		this.frmMikki.setBounds(100, 100, 968, 742);
+		this.frmMikki.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frmMikki.getContentPane().setLayout(null);
 
 		this.tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		this.tabbedPane.setBounds(10, 11, 932, 629);
-		this.frame.getContentPane().add(this.tabbedPane);
+		this.frmMikki.getContentPane().add(this.tabbedPane);
 
 		this.scrollPane = new JScrollPane();
 		this.tabbedPane.addTab("Pages", null, this.scrollPane, null);
@@ -340,7 +341,7 @@ public class MainWindow extends Thread
 		this.preloadPanel = new JPanel();
 		this.preloadPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Preload", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		this.preloadPanel.setBounds(130, 651, 269, 36);
-		this.frame.getContentPane().add(this.preloadPanel);
+		this.frmMikki.getContentPane().add(this.preloadPanel);
 		this.preloadPanel.setLayout(null);
 
 		this.preloadLabel = new JLabel("Preload progress:");
@@ -354,7 +355,7 @@ public class MainWindow extends Thread
 		this.panel_1 = new JPanel();
 		this.panel_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "New page", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		this.panel_1.setBounds(745, 651, 197, 45);
-		this.frame.getContentPane().add(this.panel_1);
+		this.frmMikki.getContentPane().add(this.panel_1);
 		this.panel_1.setLayout(null);
 
 		this.newButton = new JButton("New page");
@@ -392,7 +393,7 @@ public class MainWindow extends Thread
 		this.panel_2 = new JPanel();
 		this.panel_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Refresh", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		this.panel_2.setBounds(20, 651, 101, 45);
-		this.frame.getContentPane().add(this.panel_2);
+		this.frmMikki.getContentPane().add(this.panel_2);
 		this.panel_2.setLayout(null);
 
 		this.refreshButton = new JButton("Refresh");
@@ -434,8 +435,8 @@ public class MainWindow extends Thread
 		else
 		{
 			preload = false;
-			frame.getContentPane().remove(preloadPanel);
-			this.frame.repaint();
+			frmMikki.getContentPane().remove(preloadPanel);
+			this.frmMikki.repaint();
 		}
 	}
 
@@ -484,7 +485,7 @@ public class MainWindow extends Thread
 
 			ld.update(2);
 
-			this.frame.repaint();
+			this.frmMikki.repaint();
 		}
 		catch (IllegalArgumentException | IllegalAccessException | IOException e)
 		{
@@ -522,7 +523,7 @@ public class MainWindow extends Thread
 		changePasswordButton.setEnabled(true);
 		newPassword.setEnabled(true);
 
-		frame.repaint();
+		frmMikki.repaint();
 	}
 
 	private void login_reset()
@@ -543,7 +544,7 @@ public class MainWindow extends Thread
 		changePasswordButton.setEnabled(false);
 		newPassword.setEnabled(false);
 
-		frame.repaint();
+		frmMikki.repaint();
 	}
 
 	private void login_check()
