@@ -309,6 +309,7 @@ public class MainWindow extends Thread
 		this.panel_1.setLayout(null);
 
 		this.newButton = new JButton("New page");
+		this.newButton.setEnabled(false);
 		this.newButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
 				try
@@ -332,6 +333,7 @@ public class MainWindow extends Thread
 		this.panel_1.add(this.newButton);
 
 		this.newPageName = new JTextField();
+		this.newPageName.setEnabled(false);
 		this.newPageName.setBounds(105, 17, 86, 20);
 		this.panel_1.add(this.newPageName);
 		this.newPageName.setColumns(10);
@@ -422,6 +424,19 @@ public class MainWindow extends Thread
 		passwordText.setText("");
 		logoutButton.setEnabled(true);
 		deleteButton.setEnabled(true);
+		
+		try
+		{
+			if (mikki_acc.editor())
+			{
+				newPageName.setEnabled(true);
+				newButton.setEnabled(true);
+			}
+		}
+		catch (IllegalArgumentException | IllegalAccessException | IOException e)
+		{
+			throw new IllegalStateException(e.getMessage());
+		}
 
 		frame.repaint();
 	}
@@ -437,6 +452,9 @@ public class MainWindow extends Thread
 		passwordText.setText("");
 		logoutButton.setEnabled(false);
 		deleteButton.setEnabled(false);
+		
+		newPageName.setEnabled(false);
+		newButton.setEnabled(false);
 
 		frame.repaint();
 	}
