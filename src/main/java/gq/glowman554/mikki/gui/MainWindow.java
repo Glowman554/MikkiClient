@@ -89,7 +89,7 @@ public class MainWindow extends Thread
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					throw new IllegalStateException(e.getMessage());
 				}
 			}
 		});
@@ -221,7 +221,7 @@ public class MainWindow extends Thread
 				}
 				catch (IllegalArgumentException | IllegalAccessException | IOException e1)
 				{
-					e1.printStackTrace();
+					throw new IllegalStateException(e1.getMessage());
 				}
 
 			}
@@ -244,7 +244,7 @@ public class MainWindow extends Thread
 				}
 				catch (IllegalArgumentException | IllegalAccessException | IOException e1)
 				{
-					e1.printStackTrace();
+					throw new IllegalStateException(e1.getMessage());
 				}
 
 			}
@@ -405,7 +405,7 @@ public class MainWindow extends Thread
 		}
 		catch (IllegalArgumentException | IllegalAccessException | IOException e)
 		{
-			e.printStackTrace();
+			throw new IllegalStateException(e.getMessage());
 		}
 
 		ld.dispose();
@@ -454,7 +454,7 @@ public class MainWindow extends Thread
 			}
 			catch (IllegalArgumentException | IllegalAccessException | IOException e)
 			{
-				e.printStackTrace();
+				throw new IllegalStateException(e.getMessage());
 			}
 		}
 		else
