@@ -42,6 +42,8 @@ public class ViewFrame extends JFrame
 	 */
 	public ViewFrame(Mikki mikki, MikkiAccountChecker mikki_acc, MainWindow mw, String page_id)
 	{
+		setResizable(false);
+		setAlwaysOnTop(true);
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 711, 600);

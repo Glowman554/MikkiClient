@@ -23,6 +23,8 @@ public class LoadingDialog extends JDialog
 	 */
 	public LoadingDialog(int max)
 	{
+		setResizable(false);
+		setAlwaysOnTop(true);
 		this.max = max;
 
 		setTitle("Loading...");

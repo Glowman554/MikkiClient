@@ -118,6 +118,7 @@ public class MainWindow extends Thread
 	private void initialize()
 	{
 		this.frame = new JFrame();
+		this.frame.setResizable(false);
 		this.frame.setBounds(100, 100, 968, 742);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.getContentPane().setLayout(null);
