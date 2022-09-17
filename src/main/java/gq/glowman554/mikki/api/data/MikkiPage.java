@@ -28,6 +28,6 @@ public class MikkiPage
 	@SuppressWarnings("deprecation")
 	public static String encode(String text)
 	{
-		return Base64.getEncoder().encodeToString(URLEncoder.encode(process_escapes(text)).replace("%0[aA]", "\n").getBytes());
+		return Base64.getEncoder().encodeToString(URLEncoder.encode(process_escapes(text)).replace("%0[aA]", "\n").replace("+", "%20") .getBytes());
 	}
 }
