@@ -15,6 +15,7 @@ import gq.glowman554.mikki.api.Mikki;
 import gq.glowman554.mikki.api.MikkiAccountChecker;
 import gq.glowman554.mikki.api.data.MikkiPage;
 import gq.glowman554.mikki.utils.ExceptionUtils;
+import gq.glowman554.mikki.utils.FileUtils;
 import gq.glowman554.mikki.utils.Log;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
@@ -31,6 +32,7 @@ import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
+import javax.swing.JTextArea;
 
 public class MainWindow extends Thread
 {
@@ -67,6 +69,7 @@ public class MainWindow extends Thread
 	private JTextField newPassword;
 	private JButton refreshButton;
 	private JPanel panel_2;
+	private JTextArea licenseText;
 
 	/**
 	 * Launch the application.
@@ -320,6 +323,18 @@ public class MainWindow extends Thread
 		this.newPassword.setBounds(139, 107, 158, 20);
 		this.panel.add(this.newPassword);
 		this.newPassword.setColumns(10);
+		
+		this.licenseText = new JTextArea();
+		try
+		{
+			this.licenseText.setText(FileUtils.readFile(getClass().getClassLoader().getResourceAsStream("LICENSE.txt")));
+		}
+		catch (IOException e3)
+		{
+			e3.printStackTrace();
+		}
+		this.licenseText.setEditable(false);
+		this.tabbedPane.addTab("About", null, this.licenseText, null);
 
 		this.preloadPanel = new JPanel();
 		this.preloadPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Preload", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
