@@ -61,6 +61,7 @@ public class MainWindow extends Thread
 
 	private Mikki mikki = new Mikki();
 	private MikkiAccountChecker mikki_acc = new MikkiAccountChecker(mikki);
+	private JButton deleteButton;
 
 	/**
 	 * Launch the application.
@@ -216,7 +217,7 @@ public class MainWindow extends Thread
 				try
 				{
 					mikki_acc.login(usernameText.getText(), passwordText.getText());
-					login_success();
+					login_check();
 				}
 				catch (IllegalArgumentException | IllegalAccessException | IOException e1)
 				{
@@ -239,7 +240,7 @@ public class MainWindow extends Thread
 				try
 				{			
 					mikki_acc.create(usernameText.getText(), passwordText.getText());
-					login_success();
+					login_check();
 				}
 				catch (IllegalArgumentException | IllegalAccessException | IOException e1)
 				{
@@ -255,8 +256,8 @@ public class MainWindow extends Thread
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				mikki_acc.delete();
-				login_reset();
+				mikki_acc.logout();
+				login_check();
 			}
 		});
 		this.logoutButton.setEnabled(false);
@@ -267,6 +268,25 @@ public class MainWindow extends Thread
 		this.editorBox.setEnabled(false);
 		this.editorBox.setBounds(305, 7, 97, 23);
 		this.panel.add(this.editorBox);
+		
+		this.deleteButton = new JButton("Delete");
+		this.deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try
+				{
+					mikki_acc.delete();
+				}
+				catch (IOException e1)
+				{
+					throw new IllegalStateException(e1.getMessage());
+				}
+				
+				login_check();
+			}
+		});
+		this.deleteButton.setEnabled(false);
+		this.deleteButton.setBounds(307, 72, 89, 23);
+		this.panel.add(this.deleteButton);
 
 		this.preloadPanel = new JPanel();
 		this.preloadPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Preload", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -321,20 +341,7 @@ public class MainWindow extends Thread
 	public void run()
 	{
 		load_pages_and_changes();
-		
-		if (mikki_acc.check())
-		{
-			login_success();
-			
-			try
-			{
-				editorBox.setSelected(mikki_acc.editor());
-			}
-			catch (IllegalArgumentException | IllegalAccessException | IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
+		login_check();
 		
 		if (want_preload())
 		{
@@ -414,6 +421,7 @@ public class MainWindow extends Thread
 		passwordText.setEnabled(false);
 		passwordText.setText("");
 		logoutButton.setEnabled(true);
+		deleteButton.setEnabled(true);
 
 		frame.repaint();
 	}
@@ -428,10 +436,33 @@ public class MainWindow extends Thread
 		passwordText.setEnabled(true);
 		passwordText.setText("");
 		logoutButton.setEnabled(false);
+		deleteButton.setEnabled(false);
 
 		frame.repaint();
 	}
 
+	private void login_check()
+	{
+		if (mikki_acc.check())
+		{
+			login_success();
+			
+			try
+			{
+				editorBox.setSelected(mikki_acc.editor());
+				usernameText.setText(mikki_acc.username());
+			}
+			catch (IllegalArgumentException | IllegalAccessException | IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			login_reset();
+		}
+	}
+	
 	public boolean want_preload()
 	{
 		String[] options = new String[] {"yes", "no"};

@@ -102,6 +102,12 @@ public class Mikki extends Thread
 		return (MikkiToken) new Reflex(new ReflexJsonLoader(response)).load(new MikkiToken());
 	}
 	
+	public void delete_account(String token) throws IOException
+	{
+		String response = HttpClient.post(this.base_url + "/acc/delete", token);
+		Log.log(response);
+	}
+	
 	public MikkiAccount info(String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.post(this.base_url + "/acc/info", token);

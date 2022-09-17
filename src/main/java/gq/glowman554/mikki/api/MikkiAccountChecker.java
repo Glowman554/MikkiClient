@@ -54,11 +54,22 @@ public class MikkiAccountChecker
 		return token.token;
 	}
 	
-	public void delete()
+	public String username() throws IllegalArgumentException, IllegalAccessException, IOException
+	{
+		return mikki.info(token()).username;
+	}
+	
+	public void logout()
 	{
 		new File(token_file).delete();
 		acc = null;
 		token = null;
+	}
+	
+	public void delete() throws IOException
+	{
+		mikki.delete_account(token());
+		logout();
 	}
 	
 	public boolean check()
