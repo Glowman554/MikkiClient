@@ -62,6 +62,8 @@ public class MainWindow extends Thread
 	private Mikki mikki = new Mikki();
 	private MikkiAccountChecker mikki_acc = new MikkiAccountChecker(mikki);
 	private JButton deleteButton;
+	private JButton changePasswordButton;
+	private JTextField newPassword;
 
 	/**
 	 * Launch the application.
@@ -287,6 +289,30 @@ public class MainWindow extends Thread
 		this.deleteButton.setEnabled(false);
 		this.deleteButton.setBounds(307, 72, 89, 23);
 		this.panel.add(this.deleteButton);
+		
+		this.changePasswordButton = new JButton("Change password");
+		this.changePasswordButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try
+				{
+					mikki_acc.chpasswd(newPassword.getText());
+					newPassword.setText("");
+				}
+				catch (IOException | IllegalArgumentException | IllegalAccessException e1)
+				{
+					throw new IllegalStateException(e1.getMessage());
+				}
+				
+				login_check();
+			}
+		});
+		this.changePasswordButton.setBounds(10, 106, 119, 23);
+		this.panel.add(this.changePasswordButton);
+		
+		this.newPassword = new JTextField();
+		this.newPassword.setBounds(139, 107, 158, 20);
+		this.panel.add(this.newPassword);
+		this.newPassword.setColumns(10);
 
 		this.preloadPanel = new JPanel();
 		this.preloadPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Preload", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -437,6 +463,9 @@ public class MainWindow extends Thread
 		{
 			throw new IllegalStateException(e.getMessage());
 		}
+		
+		changePasswordButton.setEnabled(true);
+		newPassword.setEnabled(true);
 
 		frame.repaint();
 	}
@@ -455,6 +484,9 @@ public class MainWindow extends Thread
 		
 		newPageName.setEnabled(false);
 		newButton.setEnabled(false);
+		
+		changePasswordButton.setEnabled(false);
+		newPassword.setEnabled(false);
 
 		frame.repaint();
 	}

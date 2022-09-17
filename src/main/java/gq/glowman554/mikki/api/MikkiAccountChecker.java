@@ -66,6 +66,11 @@ public class MikkiAccountChecker
 		token = null;
 	}
 	
+	public void chpasswd(String new_password) throws IllegalArgumentException, IllegalAccessException, IOException
+	{
+		mikki.chpasswd(token(), new_password);
+	}
+	
 	public void delete() throws IOException
 	{
 		mikki.delete_account(token());

@@ -115,6 +115,17 @@ public class Mikki extends Thread
 		return (MikkiAccount) new Reflex(new ReflexJsonLoader(response)).load(new MikkiAccount());
 	}
 	
+	public MikkiAccount chpasswd(String token, String new_password) throws IOException, IllegalArgumentException, IllegalAccessException
+	{
+		JsonNode obj = JsonNode.object();
+		obj.set("token", token);
+		obj.set("password", new_password);
+		
+		String response = HttpClient.post(this.base_url + "/acc/chpasswd", obj.toString());
+		
+		return (MikkiAccount) new Reflex(new ReflexJsonLoader(response)).load(new MikkiAccount());
+	}
+	
 	public boolean check(String token) throws IOException
 	{
 		String response = HttpClient.post(this.base_url + "/acc/check", token);
