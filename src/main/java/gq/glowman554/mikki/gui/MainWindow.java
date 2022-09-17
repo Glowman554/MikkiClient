@@ -61,9 +61,12 @@ public class MainWindow extends Thread
 
 	private Mikki mikki = new Mikki();
 	private MikkiAccountChecker mikki_acc = new MikkiAccountChecker(mikki);
+	private boolean preload = false;
 	private JButton deleteButton;
 	private JButton changePasswordButton;
 	private JTextField newPassword;
+	private JButton refreshButton;
+	private JPanel panel_2;
 
 	/**
 	 * Launch the application.
@@ -316,7 +319,7 @@ public class MainWindow extends Thread
 
 		this.preloadPanel = new JPanel();
 		this.preloadPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Preload", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		this.preloadPanel.setBounds(10, 651, 269, 36);
+		this.preloadPanel.setBounds(130, 651, 269, 36);
 		this.frame.getContentPane().add(this.preloadPanel);
 		this.preloadPanel.setLayout(null);
 
@@ -363,6 +366,31 @@ public class MainWindow extends Thread
 		this.newPageName.setBounds(105, 17, 86, 20);
 		this.panel_1.add(this.newPageName);
 		this.newPageName.setColumns(10);
+		
+		this.panel_2 = new JPanel();
+		this.panel_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Refresh", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		this.panel_2.setBounds(20, 651, 101, 45);
+		this.frame.getContentPane().add(this.panel_2);
+		this.panel_2.setLayout(null);
+		
+		this.refreshButton = new JButton("Refresh");
+		this.refreshButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				load_pages_and_changes();
+				
+				if (preload)
+				{
+					mikki = new Mikki();
+					mikki_acc = new MikkiAccountChecker(mikki);
+					mikki.setPr((p) -> preloadProgress.setValue(p));
+					mikki.start();
+				} else {
+					mikki.clean_cache();
+				}
+			}
+		});
+		this.refreshButton.setBounds(6, 16, 89, 23);
+		this.panel_2.add(this.refreshButton);
 	}
 
 	@Override
@@ -373,11 +401,13 @@ public class MainWindow extends Thread
 		
 		if (want_preload())
 		{
+			preload = true;
 			mikki.setPr((p) -> preloadProgress.setValue(p));
 			mikki.start();
 		}
 		else
 		{
+			preload = false;
 			frame.getContentPane().remove(preloadPanel);
 			this.frame.repaint();
 		}

@@ -133,6 +133,12 @@ public class Mikki extends Thread
 		return response.equals("true");
 	}
 	
+	public void clean_cache()
+	{
+		Log.log("Deleting cache...");
+		page_cache.clear();
+	}
+	
 	@Override
 	public void run()
 	{
