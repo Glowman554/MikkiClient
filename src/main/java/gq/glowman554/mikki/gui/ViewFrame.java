@@ -2,18 +2,22 @@ package gq.glowman554.mikki.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileSystemView;
 
 import gq.glowman554.mikki.api.Mikki;
 import gq.glowman554.mikki.api.MikkiAccountChecker;
 import gq.glowman554.mikki.api.data.MikkiPage;
+import gq.glowman554.mikki.utils.FileUtils;
 import gq.glowman554.mikki.utils.Log;
 
 public class ViewFrame extends JFrame
@@ -31,6 +35,7 @@ public class ViewFrame extends JFrame
 	private JButton deleteButton;
 
 	private MikkiPage page;
+	private JButton downloadButton;
 
 	/**
 	 * Create the frame.
@@ -106,6 +111,37 @@ public class ViewFrame extends JFrame
 		});
 		this.deleteButton.setBounds(109, 526, 89, 23);
 		this.contentPane.add(this.deleteButton);
+
+		this.downloadButton = new JButton("Download");
+		this.downloadButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				try
+				{
+					var page = mikki.get(page_id);
+
+					JFileChooser fileChooser = new JFileChooser();
+					fileChooser.setDialogTitle("Specify a file to save");
+					fileChooser.setSelectedFile(new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "/" + page.page_title + ".md"));
+					
+					int userSelection = fileChooser.showSaveDialog(null);
+
+					if (userSelection == JFileChooser.APPROVE_OPTION)
+					{
+						File fileToSave = fileChooser.getSelectedFile();
+						Log.log("Saving to " + fileToSave.getAbsolutePath() + "...");
+						FileUtils.writeFile(fileToSave.getAbsolutePath(), page.page_text);
+					}
+				}
+				catch (IllegalArgumentException | IllegalAccessException | IOException e1)
+				{
+					throw new IllegalStateException(e1.getMessage());
+				}
+			}
+		});
+		this.downloadButton.setBounds(208, 526, 89, 23);
+		this.contentPane.add(this.downloadButton);
 
 		var _this = this;
 		new Thread(() -> {
