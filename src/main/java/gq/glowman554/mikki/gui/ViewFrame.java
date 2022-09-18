@@ -105,7 +105,7 @@ public class ViewFrame extends JFrame
 
 					mw.load_pages_and_changes();
 				}
-				catch (IOException | IllegalArgumentException e2)
+				catch (IOException | IllegalArgumentException | IllegalAccessException e2)
 				{
 					throw new IllegalStateException(e2.getMessage());
 				}

@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import gq.glowman554.mikki.api.data.MikkiAccount;
 import gq.glowman554.mikki.api.data.MikkiChanges;
+import gq.glowman554.mikki.api.data.MikkiError;
 import gq.glowman554.mikki.api.data.MikkiList;
 import gq.glowman554.mikki.api.data.MikkiPage;
 import gq.glowman554.mikki.api.data.MikkiToken;
@@ -13,6 +14,7 @@ import gq.glowman554.mikki.utils.Log;
 import gq.glowman554.reflex.Reflex;
 import gq.glowman554.reflex.loaders.ReflexJsonLoader;
 import net.shadew.json.JsonNode;
+import net.shadew.json.JsonSyntaxException;
 
 public class Mikki extends Thread
 {
@@ -25,6 +27,7 @@ public class Mikki extends Thread
 	public MikkiList list() throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.get(this.base_url + "/wiki/page/list");
+		check_response(response);
 
 		return (MikkiList) new Reflex(new ReflexJsonLoader(URLDecoder.decode(response))).load(new MikkiList());
 	}
@@ -39,6 +42,7 @@ public class Mikki extends Thread
 		else
 		{
 			String response = HttpClient.get(this.base_url + "/wiki/page/get?page_id=" + page_id);
+			check_response(response);
 			MikkiPage page = (MikkiPage) new Reflex(new ReflexJsonLoader(URLDecoder.decode(response))).load(new MikkiPage());
 			page_cache.put(page.page_id, page);
 			return page;
@@ -50,6 +54,7 @@ public class Mikki extends Thread
 	{
 		Log.log(page_text);
 		String response = HttpClient.post(String.format(this.base_url + "/wiki/page/edit?token=%s&page_id=%s&page_title=%s", token, page_id, page_title), page_text);
+		check_response(response);
 		MikkiPage page = (MikkiPage) new Reflex(new ReflexJsonLoader(URLDecoder.decode(response))).load(new MikkiPage());
 
 		page_cache.remove(page.page_id);
@@ -60,21 +65,23 @@ public class Mikki extends Thread
 	public MikkiPage create(String page_text, String page_title, String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.post(String.format(this.base_url + "/wiki/page/create?token=%s&page_title=%s", token, page_title), page_text);
+		check_response(response);
 		MikkiPage page = (MikkiPage) new Reflex(new ReflexJsonLoader(URLDecoder.decode(response))).load(new MikkiPage());
 
 		return page;
 	}
 
-	public void delete(String page_id, String token) throws IOException
+	public void delete(String page_id, String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.get(String.format(this.base_url + "/wiki/page/delete?token=%s&page_id=%s", token, page_id));
-		Log.log(response);
+		check_response(response);
 	}
 
 	@SuppressWarnings("deprecation")
 	public MikkiChanges changelog() throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.get(this.base_url + "/wiki/page/changelog");
+		check_response(response);
 
 		return (MikkiChanges) new Reflex(new ReflexJsonLoader(URLDecoder.decode(response))).load(new MikkiChanges());
 	}
@@ -86,6 +93,7 @@ public class Mikki extends Thread
 		obj.set("password", password);
 
 		String response = HttpClient.post(this.base_url + "/acc/login", obj.toString());
+		check_response(response);
 
 		return (MikkiToken) new Reflex(new ReflexJsonLoader(response)).load(new MikkiToken());
 	}
@@ -97,19 +105,21 @@ public class Mikki extends Thread
 		obj.set("password", password);
 
 		String response = HttpClient.post(this.base_url + "/acc/create", obj.toString());
+		check_response(response);
 
 		return (MikkiToken) new Reflex(new ReflexJsonLoader(response)).load(new MikkiToken());
 	}
 
-	public void delete_account(String token) throws IOException
+	public void delete_account(String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.post(this.base_url + "/acc/delete", token);
-		Log.log(response);
+		check_response(response);
 	}
 
 	public MikkiAccount info(String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.post(this.base_url + "/acc/info", token);
+		check_response(response);
 
 		return (MikkiAccount) new Reflex(new ReflexJsonLoader(response)).load(new MikkiAccount());
 	}
@@ -121,15 +131,30 @@ public class Mikki extends Thread
 		obj.set("password", new_password);
 
 		String response = HttpClient.post(this.base_url + "/acc/chpasswd", obj.toString());
+		check_response(response);
 
 		return (MikkiAccount) new Reflex(new ReflexJsonLoader(response)).load(new MikkiAccount());
 	}
 
-	public boolean check(String token) throws IOException
+	public boolean check(String token) throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		String response = HttpClient.post(this.base_url + "/acc/check", token);
+		check_response(response);
 
 		return response.equals("true");
+	}
+
+	public void check_response(String response) throws IllegalArgumentException, IllegalAccessException
+	{
+		try
+		{
+			MikkiError error = (MikkiError) new Reflex(new ReflexJsonLoader(response)).load(new MikkiError());
+			error.throw_if_error();
+		}
+		catch (JsonSyntaxException e)
+		{
+			Log.log(e.getClass().getSimpleName() + ": " + e.getMessage());
+		}
 	}
 
 	public void clean_cache()
@@ -169,14 +194,14 @@ public class Mikki extends Thread
 
 		Log.log("Prload finished.");
 	}
-	
+
 	public void setBase_url(String base_url)
 	{
 		if (base_url.endsWith("/"))
 		{
 			base_url = base_url.substring(0, base_url.length() - 1);
 		}
-		
+
 		this.base_url = base_url;
 	}
 

@@ -299,7 +299,14 @@ public class MainWindow extends Thread
 			public void actionPerformed(ActionEvent e)
 			{
 				mikki_acc.logout();
-				login_check();
+				try
+				{
+					login_check();
+				}
+				catch (IllegalArgumentException | IllegalAccessException e1)
+				{
+					throw new IllegalStateException(e1.getMessage());
+				}
 			}
 		});
 		this.logoutButton.setEnabled(false);
@@ -320,12 +327,19 @@ public class MainWindow extends Thread
 				{
 					mikki_acc.delete();
 				}
-				catch (IOException e1)
+				catch (IOException | IllegalArgumentException | IllegalAccessException e1)
 				{
 					throw new IllegalStateException(e1.getMessage());
 				}
 
-				login_check();
+				try
+				{
+					login_check();
+				}
+				catch (IllegalArgumentException | IllegalAccessException e1)
+				{
+					throw new IllegalStateException(e1.getMessage());
+				}
 			}
 		});
 		this.deleteButton.setEnabled(false);
@@ -347,7 +361,14 @@ public class MainWindow extends Thread
 					throw new IllegalStateException(e1.getMessage());
 				}
 
-				login_check();
+				try
+				{
+					login_check();
+				}
+				catch (IllegalArgumentException | IllegalAccessException e1)
+				{
+					throw new IllegalStateException(e1.getMessage());
+				}
 			}
 		});
 		this.changePasswordButton.setBounds(10, 106, 119, 23);
@@ -457,7 +478,14 @@ public class MainWindow extends Thread
 	public void run()
 	{
 		load_pages_and_changes();
-		login_check();
+		try
+		{
+			login_check();
+		}
+		catch (IllegalArgumentException | IllegalAccessException e)
+		{
+			throw new IllegalStateException(e.getMessage());
+		}
 
 		if (want_preload())
 		{
@@ -580,7 +608,7 @@ public class MainWindow extends Thread
 		frmMikki.repaint();
 	}
 
-	private void login_check()
+	private void login_check() throws IllegalArgumentException, IllegalAccessException
 	{
 		if (mikki_acc.check())
 		{

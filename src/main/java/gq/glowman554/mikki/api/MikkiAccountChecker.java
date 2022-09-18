@@ -20,7 +20,7 @@ public class MikkiAccountChecker
 		this.mikki = mikki;
 	}
 
-	public String token() throws IOException
+	public String token() throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		if (token == null)
 		{
@@ -71,13 +71,13 @@ public class MikkiAccountChecker
 		mikki.chpasswd(token(), new_password);
 	}
 
-	public void delete() throws IOException
+	public void delete() throws IOException, IllegalArgumentException, IllegalAccessException
 	{
 		mikki.delete_account(token());
 		logout();
 	}
 
-	public boolean check()
+	public boolean check() throws IllegalArgumentException, IllegalAccessException
 	{
 		try
 		{
