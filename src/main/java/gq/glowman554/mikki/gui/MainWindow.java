@@ -78,7 +78,7 @@ public class MainWindow extends Thread
 	private JPanel panel_2;
 	private JTextArea licenseText;
 
-	private static String config_file = ".mikki.cfg";
+	private static String config_file = System.getProperty("user.home") + "/.mikki.cfg";
 	private static Config config;
 
 	/**

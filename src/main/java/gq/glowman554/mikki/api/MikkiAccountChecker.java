@@ -10,7 +10,7 @@ import gq.glowman554.mikki.utils.FileUtils;
 public class MikkiAccountChecker
 {
 	private final Mikki mikki;
-	private final String token_file = ".mikki.token";
+	private final String token_file = System.getProperty("user.home") + "/.mikki.token";
 
 	private MikkiAccount acc;
 	private String token;
