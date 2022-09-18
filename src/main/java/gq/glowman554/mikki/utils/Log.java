@@ -5,9 +5,10 @@ import java.io.IOException;
 
 public class Log
 {
+	private static String logs_dir = "./logs";
 	private static String current_log_file = "./logs/" + System.currentTimeMillis() + ".log";
 
-	public static boolean save = false;
+	private static boolean save = false;
 
 	public static void log(String message)
 	{
@@ -24,9 +25,9 @@ public class Log
 
 			if (save)
 			{
-				if (!new File("./logs").isDirectory())
+				if (!new File(logs_dir).isDirectory())
 				{
-					new File("./logs").mkdir();
+					new File(logs_dir).mkdir();
 				}
 
 				if (!new File(current_log_file).exists())
@@ -58,5 +59,16 @@ public class Log
 	public static String getCurrent_log_file()
 	{
 		return current_log_file;
+	}
+	
+	public static void setLogDir(String dir)
+	{
+		Log.logs_dir = dir;
+		Log.current_log_file = dir + "/" + System.currentTimeMillis() + ".log";;
+	}
+	
+	public static void setSave(boolean save)
+	{
+		Log.save = save;
 	}
 }

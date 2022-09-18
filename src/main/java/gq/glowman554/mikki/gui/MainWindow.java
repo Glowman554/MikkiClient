@@ -1,6 +1,7 @@
 package gq.glowman554.mikki.gui;
 
 import java.awt.EventQueue;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -11,12 +12,18 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.sun.tools.javac.Main;
+
 import gq.glowman554.mikki.api.Mikki;
 import gq.glowman554.mikki.api.MikkiAccountChecker;
 import gq.glowman554.mikki.api.data.MikkiPage;
 import gq.glowman554.mikki.utils.ExceptionUtils;
 import gq.glowman554.mikki.utils.FileUtils;
 import gq.glowman554.mikki.utils.Log;
+import gq.glowman554.reflex.Reflex;
+import gq.glowman554.reflex.ReflexField;
+import gq.glowman554.reflex.loaders.ReflexCfgLoader;
+
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -71,6 +78,9 @@ public class MainWindow extends Thread
 	private JPanel panel_2;
 	private JTextArea licenseText;
 
+	private static String config_file = ".mikki.cfg";
+	private static Config config;
+
 	/**
 	 * Launch the application.
 	 * 
@@ -78,12 +88,15 @@ public class MainWindow extends Thread
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 * @throws ClassNotFoundException
+	 * @throws IOException
 	 */
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, IOException
 	{
 		ExceptionUtils.intercept();
 
 		// Reflex.setDebug(true);
+		
+		load_cfg();
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		EventQueue.invokeLater(new Runnable()
@@ -103,11 +116,30 @@ public class MainWindow extends Thread
 		});
 	}
 
+	public static void load_cfg() throws IOException, IllegalArgumentException, IllegalAccessException
+	{
+		if (!new File(config_file).exists())
+		{
+			Log.log("Writing default config to " + config_file + "...");
+			FileUtils.writeFile(config_file, FileUtils.readFile(Main.class.getClassLoader().getResourceAsStream("mikki.cfg")));
+		}
+		
+		Log.log("Loading cofnfig from " + config_file + "...");
+		
+		config = (Config) new Reflex(new ReflexCfgLoader(FileUtils.readFile(config_file))).load(new Config());
+		
+		Log.setSave(config.logs.save);
+		Log.setLogDir(config.logs.folder);
+		
+		Reflex.setDebug(config.reflex.debug);
+	}
+
 	/**
 	 * Create the application.
 	 */
 	public MainWindow()
 	{
+		mikki.setBase_url(config.mikki.backend);
 		initialize();
 		start();
 	}
@@ -406,6 +438,7 @@ public class MainWindow extends Thread
 				if (preload)
 				{
 					mikki = new Mikki();
+					mikki.setBase_url(config.mikki.backend);
 					mikki_acc = new MikkiAccountChecker(mikki);
 					mikki.setPr((p) -> preloadProgress.setValue(p));
 					mikki.start();
@@ -575,5 +608,36 @@ public class MainWindow extends Thread
 		int x = JOptionPane.showOptionDialog(null, "Do you want to preload all pages?", "Preload", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
 
 		return x == 0;
+	}
+
+	public static class Config
+	{
+		@ReflexField
+		public ReflexConfig reflex = new ReflexConfig();
+		@ReflexField
+		public LogConfig logs = new LogConfig();
+		@ReflexField
+		public MikkiConfig mikki = new MikkiConfig();
+		
+		public static class ReflexConfig
+		{
+			@ReflexField
+			public boolean debug;
+		}
+		
+		public static class LogConfig
+		{
+			@ReflexField
+			public boolean save;
+			@ReflexField
+			public String folder;
+		}
+		
+		public static class MikkiConfig
+		{
+			@ReflexField
+			public String backend;
+		}
+
 	}
 }

@@ -16,7 +16,7 @@ import net.shadew.json.JsonNode;
 
 public class Mikki extends Thread
 {
-	private final String base_url = "https://mikki.deno.dev/api/v2";
+	private String base_url = "https://mikki.deno.dev/api/v2";
 	private ProgressReporter pr = null;
 
 	private HashMap<String, MikkiPage> page_cache = new HashMap<>();
@@ -168,6 +168,16 @@ public class Mikki extends Thread
 		}
 
 		Log.log("Prload finished.");
+	}
+	
+	public void setBase_url(String base_url)
+	{
+		if (base_url.endsWith("/"))
+		{
+			base_url = base_url.substring(0, base_url.length() - 1);
+		}
+		
+		this.base_url = base_url;
 	}
 
 	public void setPr(ProgressReporter pr)
